@@ -41,13 +41,13 @@ cat watches.yaml
   kind: Hello
   chart: helm-charts/app-chart
 #+kubebuilder:scaffold:watch
-
+```
 
 ## build operator docker image
 ```
-xxxxx make docker-build docker-push IMG="grahamh/hello-operator:1.0"
+###make docker-build docker-push IMG="grahamh/hello-operator:1.0"
 
-for multi-arch image build directly:
+#for multi-arch image build directly:
 docker buildx build --platform linux/amd64,linux/arm64 --push -t grahamh/hello-operator:1.0 .
 ```
 
@@ -90,9 +90,9 @@ kustomize build config/crd > deploy-yaml/hello-crd.yaml
 
 ### Create and build the operator bundle
 ```
-make bundle IMG="grahamh/hello-operator:1.0"
+make bundle IMG="grahamh/hello-operator-bundle:1.0"
 
-xxxxxmake bundle-build IMG="grahamh/hello-operator-bundle:1.0"
+####make bundle-build IMG="grahamh/hello-operator-bundle:1.0"
 docker buildx build -f bundle.Dockerfile --platform linux/amd64,linux/arm64 --push -t grahamh/hello-operator-bundle:1.0 .
 ```
 
