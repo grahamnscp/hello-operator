@@ -89,7 +89,7 @@ mkdir deploy-yaml
 kustomize build config/crd > deploy-yaml/hello-crd.yaml
 ```
 
-Generate the default operator artifacts
+### Generate the default operator artifacts
 ```
 CWD=`pwd`
 cd config/manager && kustomize edit set image controller=hello-operator:1.0
