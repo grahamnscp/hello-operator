@@ -45,7 +45,9 @@ cat watches.yaml
 
 ## build operator docker image
 ```
-make docker-build docker-push IMG="grahamh/hello-operator:1.0"
+###make docker-build docker-push IMG="grahamh/hello-operator:1.0"
+# for multi-arch image build directly:
+docker buildx build --platform linux/amd64,linux/arm64 --push -t grahamh/hello-operator:1.0 .
 ```
 
 ## investigate image
@@ -88,10 +90,10 @@ kustomize build config/crd > deploy-yaml/hello-crd.yaml
 ### Create and build the operator bundle
 ```
 make bundle IMG="grahamh/hello-operator:1.0"
-make bundle-build IMG="grahamh/hello-operator:1.0"
-```
 
-WIP
+###make bundle-build IMG="grahamh/hello-operator-bundle:1.0"
+docker buildx build -f bundle.Dockerfile --platform linux/amd64,linux/arm64 --push -t grahamh/hello-operator-bundle:1.0 .
+```
 
 
 ## Deploy the operator on linux host running kubernetes..
