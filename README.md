@@ -73,6 +73,7 @@ total 68312
 drwxr-xr-x 1 root root     4096 Dec  9 23:48 .
 drwxr-xr-x 1 root root     4096 Nov 30 17:53 ..
 -rwxr-xr-x 1 root root 69942499 Dec  9 23:48 helm-operator
+```
 
 
 ## Prepare deployment artifacts
