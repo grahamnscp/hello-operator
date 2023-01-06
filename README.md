@@ -43,7 +43,7 @@ cat watches.yaml
 #+kubebuilder:scaffold:watch
 ```
 
-## build operator docker image
+## Build operator docker image
 ```
 ###make docker-build docker-push IMG="grahamh/hello-operator:1.0"
 
@@ -51,7 +51,7 @@ cat watches.yaml
 docker buildx build --platform linux/amd64,linux/arm64 --push -t grahamh/hello-operator:1.0 .
 ```
 
-## investigate image
+## Investigate operator image
 ```
 docker run --rm -it --entrypoint=/bin/bash grahamh/hello-operator:1.0
 
