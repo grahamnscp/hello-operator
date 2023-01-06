@@ -16,7 +16,7 @@ mkdir hello-operator
 cd hello-operator
 ```
 
-doc ref: [plugins](https://sdk.operatorframework.io/docs/contribution-guidelines/plugins/)
+doc ref: [plugins](https://sdk.operatorframework.io/docs/contribution-guidelines/plugins/)   
 note: domain varaiable used as image registry name
 ```
 operator-sdk init --domain grahamh --plugins="helm.sdk.operatorframework.io/v1"
