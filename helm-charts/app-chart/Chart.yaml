@@ -1,0 +1,7 @@
+apiVersion: v2
+appVersion: "3.0"
+description: Basic App Helm chart
+icon: https://media.istockphoto.com/id/1133905340/vector/greeting-sign-hello-symbol.jpg?s=612x612&w=0&k=20&c=bRlrvDdp2EAW3bi3f6wEMdVQs_G3_eZn3ZrwtfQQ6pw=
+name: app-chart
+type: application
+version: 0.1.3

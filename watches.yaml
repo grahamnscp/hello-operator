@@ -1,0 +1,6 @@
+# Use the 'create api' subcommand to add watches to this file.
+- group: hello.grahamh
+  version: v1alpha1
+  kind: Hello
+  chart: helm-charts/app-chart
+#+kubebuilder:scaffold:watch
