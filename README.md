@@ -11,12 +11,12 @@ arch -arm64 brew install operator-sdk
 Ref: [quickstart](https://sdk.operatorframework.io/docs/building-operators/helm/quickstart/)
 
 ## Create working directory and initialise
-doc ref: [plugins](https://sdk.operatorframework.io/docs/contribution-guidelines/plugins/)
 ```
 mkdir hello-operator
 cd hello-operator
 ```
 
+doc ref: [plugins](https://sdk.operatorframework.io/docs/contribution-guidelines/plugins/)
 note: domain varaiable used as image registry name
 ```
 operator-sdk init --domain grahamh --plugins="helm.sdk.operatorframework.io/v1"
