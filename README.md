@@ -98,7 +98,7 @@ kustomize build config/default > deploy-yaml/hello-operator-1_0.yaml
 ```
 
 
-## Create and build the operator bundle (if needed?)
+## Create and build the operator bundle (not needed for deployment..)
 ```
 make bundle IMG="grahamh/hello-operator-bundle:1.0"
 
