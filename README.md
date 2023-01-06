@@ -10,24 +10,24 @@ arch -arm64 brew install operator-sdk
 ## Doc reference for operator sdk quickstart
 Ref: [quickstart](https://sdk.operatorframework.io/docs/building-operators/helm/quickstart/)
 
-## create directory and initialise
+## Create working directory and initialise
+doc ref: [plugins](https://sdk.operatorframework.io/docs/contribution-guidelines/plugins/)
 ```
 mkdir hello-operator
 cd hello-operator
 ```
 
-doc ref: [plugins](https://sdk.operatorframework.io/docs/contribution-guidelines/plugins/)
-note: domain used as image prefix
+note: domain varaiable used as image registry name
 ```
 operator-sdk init --domain grahamh --plugins="helm.sdk.operatorframework.io/v1"
 ```
 
-## copy the helm chart into place
+## Copy the helm chart into place
 ```
 cp -a <my helm chart source directory> helm-charts/
 ```
 
-# create watches.yaml entry
+## Create watches.yaml entry
 ```
 operator-sdk create api --group hello --kind Hello --helm-chart helm-charts/app-chart
 
@@ -45,8 +45,9 @@ cat watches.yaml
 
 ## build operator docker image
 ```
-###make docker-build docker-push IMG="grahamh/hello-operator:1.0"
-# for multi-arch image build directly:
+xxxxx make docker-build docker-push IMG="grahamh/hello-operator:1.0"
+
+for multi-arch image build directly:
 docker buildx build --platform linux/amd64,linux/arm64 --push -t grahamh/hello-operator:1.0 .
 ```
 
@@ -91,7 +92,7 @@ kustomize build config/crd > deploy-yaml/hello-crd.yaml
 ```
 make bundle IMG="grahamh/hello-operator:1.0"
 
-###make bundle-build IMG="grahamh/hello-operator-bundle:1.0"
+xxxxxmake bundle-build IMG="grahamh/hello-operator-bundle:1.0"
 docker buildx build -f bundle.Dockerfile --platform linux/amd64,linux/arm64 --push -t grahamh/hello-operator-bundle:1.0 .
 ```
 
