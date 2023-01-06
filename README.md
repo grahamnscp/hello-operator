@@ -89,7 +89,16 @@ mkdir deploy-yaml
 kustomize build config/crd > deploy-yaml/hello-crd.yaml
 ```
 
-### Create and build the operator bundle
+Generate the default operator artifacts
+```
+CWD=`pwd`
+cd config/manager && kustomize edit set image controller=hello-operator:1.0
+cd $CWD
+kustomize build config/default > deploy-yaml/hello-operator-1_0.yaml
+```
+
+
+## Create and build the operator bundle (if needed?)
 ```
 make bundle IMG="grahamh/hello-operator-bundle:1.0"
 
@@ -137,12 +146,11 @@ make install IMG="grahamh/hello-operator:1.0"
 customresourcedefinition.apiextensions.k8s.io/hellos.hello.grahamh
 ```
 
-### Deploy Operator using Makefile / kustomize
+### Deploy Operator Controller using Makefile / kustomize
 ```
 make deploy IMG="grahamh/hello-operator:1.0"
 
 cd config/manager && kustomize edit set image controller=controller:latest
-
 kustomize build config/default | kubectl apply -f -
 
 namespace/hello-operator-system created
