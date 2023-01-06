@@ -125,6 +125,12 @@ rm kustomize_v4.5.7_${OS}_${ARCH}.tar.gz
 
 ### Load the Operator framework CRD
 ```
+git clone https://github.com/grahamnscp/hello-operator.git
+```
+
+Assuming that you performed the build steps above in your dev environment and pushed to git..
+
+```
 make install IMG="grahamh/hello-operator:1.0"
 
 /usr/local/bin/kustomize build config/crd | kubectl apply -f -
@@ -196,6 +202,15 @@ E0106 15:07:17.610823       1 memcache.go:206] couldn't get resource list for cu
 ```
 
 ## Deploy the App using the Operator
+
+Note the api Kind:
+```
+head -2 config/samples/hello_v1alpha1_hello.yaml
+apiVersion: hello.grahamh/v1alpha1
+kind: Hello
+```
+
+Edit or deploy the generated sample as is:
 ```
 kubectl apply -f  config/samples/hello_v1alpha1_hello.yaml
 ```
