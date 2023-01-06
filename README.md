@@ -153,6 +153,48 @@ service/hello-operator-controller-manager-metrics-service created
 deployment.apps/hello-operator-controller-manager created
 ```
 
+### Check the Operator running:
+```
+kubectl get crd | grep hello
+hellos.hello.grahamh                          2023-01-06T14:32:09Z
+
+kubectl get ns | grep hello
+hello-operator-system   Active   51m
+
+kubectl -n hello-operator-system get all
+NAME                                                     READY   STATUS                       RESTARTS   AGE
+pod/hello-operator-controller-manager-565b4ddf56-wknxb   2/2     Running                      0          48m
+
+NAME                                                        TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+service/hello-operator-controller-manager-metrics-service   ClusterIP   10.96.0.159   <none>        8443/TCP   52m
+
+NAME                                                READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/hello-operator-controller-manager   1/1     1            1           52m
+
+NAME                                                           DESIRED   CURRENT   READY   AGE
+replicaset.apps/hello-operator-controller-manager-565b4ddf56   1         1         1       52m
+
+kubectl -n hello-operator-system logs pod/hello-operator-controller-manager-565b4ddf56-wknxb
+{"level":"info","ts":1673015803.18843,"logger":"cmd","msg":"Version","Go Version":"go1.19.4","GOOS":"linux","GOARCH":"amd64","helm-operator":"v1.26.0","commit":"cbeec475e4612e19f1047ff7014342afe93f60d2"}
+{"level":"info","ts":1673015803.1893198,"logger":"cmd","msg":"Watch namespaces not configured by environment variable WATCH_NAMESPACE or file. Watching all namespaces.","Namespace":""}
+{"level":"info","ts":1673015803.3930433,"logger":"controller-runtime.metrics","msg":"Metrics server is starting to listen","addr":"127.0.0.1:8080"}
+{"level":"info","ts":1673015803.3942614,"logger":"helm.controller","msg":"Watching resource","apiVersion":"hello.grahamh/v1alpha1","kind":"Hello","namespace":"","reconcilePeriod":"1m0s"}
+I0106 14:36:43.394799       1 leaderelection.go:248] attempting to acquire leader lease hello-operator-system/hello-operator...
+{"level":"info","ts":1673015803.3948064,"msg":"Starting server","path":"/metrics","kind":"metrics","addr":"127.0.0.1:8080"}
+{"level":"info","ts":1673015803.394807,"msg":"Starting server","kind":"health probe","addr":"[::]:8081"}
+I0106 14:36:43.406403       1 leaderelection.go:258] successfully acquired lease hello-operator-system/hello-operator
+{"level":"info","ts":1673015803.406685,"msg":"Starting EventSource","controller":"hello-controller","source":"kind source: *unstructured.Unstructured"}
+{"level":"info","ts":1673015803.4067383,"msg":"Starting Controller","controller":"hello-controller"}
+{"level":"info","ts":1673015803.5078287,"msg":"Starting workers","controller":"hello-controller","worker count":8}
+E0106 15:07:17.610823       1 memcache.go:206] couldn't get resource list for custom.metrics.k8s.io/v1beta1: Got empty response for: custom.metrics.k8s.io/v1beta1
+{"level":"info","ts":1673017638.297573,"msg":"Starting EventSource","controller":"hello-controller","source":"kind source: *unstructured.Unstructured"}
+{"level":"info","ts":1673017638.2976582,"logger":"helm.controller","msg":"Watching dependent resource","ownerApiVersion":"hello.grahamh/v1alpha1","ownerKind":"Hello","apiVersion":"v1","kind":"ServiceAccount"}
+{"level":"info","ts":1673017638.2979376,"msg":"Starting EventSource","controller":"hello-controller","source":"kind source: *unstructured.Unstructured"}
+{"level":"info","ts":1673017638.2979724,"logger":"helm.controller","msg":"Watching dependent resource","ownerApiVersion":"hello.grahamh/v1alpha1","ownerKind":"Hello","apiVersion":"v1","kind":"Service"}
+{"level":"info","ts":1673017638.298403,"msg":"Starting EventSource","controller":"hello-controller","source":"kind source: *unstructured.Unstructured"}
+{"level":"info","ts":1673017638.29843,"logger":"helm.controller","msg":"Watching dependent resource","ownerApiVersion":"hello.grahamh/v1alpha1","ownerKind":"Hello","apiVersion":"apps/v1","kind":"Deployment"}
+```
+
 ## Deploy the App using the Operator
 ```
 kubectl apply -f  config/samples/hello_v1alpha1_hello.yaml
@@ -174,6 +216,16 @@ deployment.apps/hello-sample-app-chart   2/2     2            2           10s
 
 NAME                                               DESIRED   CURRENT   READY   AGE
 replicaset.apps/hello-sample-app-chart-7cfc6c64d   2         2         2       10s
+```
+
+### Operator conroller logs for app deployment:
+```
+kubectl -n hello-operator-system logs pod/hello-operator-controller-manager-565b4ddf56-wknxb
+<snip>
+{"level":"info","ts":1673017638.298441,"logger":"helm.controller","msg":"Installed release","namespace":"default","name":"hello-sample","apiVersion":"hello.grahamh/v1alpha1","kind":"Hello","release":"hello-sample"}
+E0106 15:07:18.454813       1 memcache.go:206] couldn't get resource list for custom.metrics.k8s.io/v1beta1: Got empty response for: custom.metrics.k8s.io/v1beta1
+{"level":"info","ts":1673017639.0278964,"logger":"helm.controller","msg":"Reconciled release","namespace":"default","name":"hello-sample","apiVersion":"hello.grahamh/v1alpha1","kind":"Hello","release":"hello-sample"}
+<snip>
 ```
 
 ### Test App:
