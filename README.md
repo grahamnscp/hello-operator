@@ -85,6 +85,12 @@ mkdir deploy-yaml
 kustomize build config/crd > deploy-yaml/hello-crd.yaml
 ```
 
+### Create and build the operator bundle
+```
+make bundle IMG="grahamh/hello-operator:1.0"
+make bundle-build IMG="grahamh/hello-operator:1.0"
+```
+
 WIP
 
 
@@ -92,19 +98,55 @@ WIP
 
 note: BYO Kubernetes (tested with kURL)
 
-### Install operator-sdk on Linux instance
+### Install operator-sdk on Linux host
 ```
 export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
 export OS=$(uname | awk '{print tolower($0)}')
+
 export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/download/v1.26.0
 curl -LO ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
 chmod +x operator-sdk_${OS}_${ARCH} && sudo mv operator-sdk_${OS}_${ARCH} /usr/local/bin/operator-sdk
 ```
 
-### Load the Operator framework CRD
+### Install kustomize on Linux host
 ```
-kubectl apply -f deploy-yaml/hello-crd.yaml
+export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
+export OS=$(uname | awk '{print tolower($0)}')
+
+curl -LO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v4.5.7/kustomize_v4.5.7_${OS}_${ARCH}.tar.gz
+tar -xf kustomize_v4.5.7_${OS}_${ARCH}.tar.gz
+chmod +x kustomize && sudo mv kustomize /usr/local/bin/
+rm kustomize_v4.5.7_${OS}_${ARCH}.tar.gz
 ```
 
-WIP
+### Load the Operator framework CRD
+```
+make install IMG="grahamh/hello-operator:1.0"
+
+/usr/local/bin/kustomize build config/crd | kubectl apply -f -
+customresourcedefinition.apiextensions.k8s.io/hellos.hello.grahamh
+```
+
+### Deploy using Makefile / kustomize
+```
+make deploy IMG="grahamh/hello-operator:1.0"
+
+cd config/manager && kustomize edit set image controller=controller:latest
+
+kustomize build config/default | kubectl apply -f -
+
+namespace/hello-operator-system created
+customresourcedefinition.apiextensions.k8s.io/hellos.hello.grahamh unchanged
+serviceaccount/hello-operator-controller-manager created
+role.rbac.authorization.k8s.io/hello-operator-leader-election-role created
+clusterrole.rbac.authorization.k8s.io/hello-operator-manager-role created
+clusterrole.rbac.authorization.k8s.io/hello-operator-metrics-reader created
+clusterrole.rbac.authorization.k8s.io/hello-operator-proxy-role created
+rolebinding.rbac.authorization.k8s.io/hello-operator-leader-election-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/hello-operator-manager-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/hello-operator-proxy-rolebinding created
+service/hello-operator-controller-manager-metrics-service created
+deployment.apps/hello-operator-controller-manager created
+```
+
 
