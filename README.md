@@ -131,7 +131,7 @@ make install IMG="grahamh/hello-operator:1.0"
 customresourcedefinition.apiextensions.k8s.io/hellos.hello.grahamh
 ```
 
-### Deploy using Makefile / kustomize
+### Deploy Operator using Makefile / kustomize
 ```
 make deploy IMG="grahamh/hello-operator:1.0"
 
@@ -153,4 +153,43 @@ service/hello-operator-controller-manager-metrics-service created
 deployment.apps/hello-operator-controller-manager created
 ```
 
+## Deploy the App using the Operator
+```
+kubectl apply -f  config/samples/hello_v1alpha1_hello.yaml
+```
+
+### Check:
+```
+kubectl get all
+NAME                                         READY   STATUS    RESTARTS   AGE
+pod/hello-sample-app-chart-7cfc6c64d-lh858   1/1     Running   0          10s
+pod/hello-sample-app-chart-7cfc6c64d-xh2fn   1/1     Running   0          10s
+
+NAME                             TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)         AGE
+service/hello-sample-app-chart   NodePort    10.96.3.167   <none>        8080:8082/TCP   10s
+service/kubernetes               ClusterIP   10.96.0.1     <none>        443/TCP         27h
+
+NAME                                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/hello-sample-app-chart   2/2     2            2           10s
+
+NAME                                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/hello-sample-app-chart-7cfc6c64d   2         2         2       10s
+```
+
+### Test App:
+```
+LOCALIP=`ip a | grep inet | grep eth0 | awk '{print $2}' | awk -F"/" '{print $1}'`
+curl ${LOCALIP}:8082
+
+ _          _ _                        _ _           _           _
+| |__   ___| | | ___    _ __ ___ _ __ | (_) ___ __ _| |_ ___  __| |
+| '_ \ / _ \ | |/ _ \  | '__/ _ \ '_ \| | |/ __/ _` | __/ _ \/ _` |
+| | | |  __/ | | (_) | | | |  __/ |_) | | | (_| (_| | ||  __/ (_| |
+|_| |_|\___|_|_|\___/  |_|  \___| .__/|_|_|\___\__,_|\__\___|\__,_|
+                                |_|
+
+[01-06-2023 15:12:24.60] Container hostname: hello-sample-app-chart-7cfc6c64d-xh2fn
+```
+
+Although the app was non deployed via Replicated! but packaged as an operator..
 
