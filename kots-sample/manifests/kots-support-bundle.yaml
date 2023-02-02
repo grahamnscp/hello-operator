@@ -1,0 +1,34 @@
+apiVersion: troubleshoot.sh/v1beta2
+kind: SupportBundle
+metadata:
+  name: app-support-bundle
+spec:
+  collectors:
+    - clusterInfo: {}
+    - clusterResources:
+        namespaces:
+          - default
+          - hello-operator-system
+    - logs:
+        name: "hello-operator-controller-logs"
+        namespace: hello-operator-system
+        selector:
+          - control-plane=controller-manager
+        limits:
+          maxAge: 720h
+          maxLines: 10000
+    - logs:
+        name: "hello-app-chart-logs"
+        namespace: '{{repl Namespace }}'
+        selector:
+          - app.kubernetes.io/name=app-chart
+        limits:
+          maxAge: 720h
+          maxLines: 10000
+  analyzers:
+    - sysctl:
+        checkName: IP forwarding enabled
+        outcomes:
+        - fail:
+            when: "net.ipv4.ip_forward = 0"
+            message: "IP forwarding is not enabled"

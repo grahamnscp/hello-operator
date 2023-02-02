@@ -1,0 +1,14 @@
+apiVersion: kots.io/v1beta1
+kind: Config
+metadata:
+  name: operatorapp-config
+spec:
+  groups:
+    - name: HelloOperatorApp
+      title: Hello Operator App Settings
+      description: Hello Operator App configContent Defaults
+      items:
+        - name: num_replicas
+          title: Number of Replicas
+          type: text
+          default: "2"

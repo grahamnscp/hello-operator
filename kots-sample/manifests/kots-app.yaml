@@ -1,0 +1,23 @@
+apiVersion: kots.io/v1beta1
+kind: Application
+metadata:
+  name: operatorapp
+spec:
+  title: "Hello Operator App"
+  icon: https://cncf-branding.netlify.app/img/projects/operatorframework/icon/black/operatorframework-icon-black.png
+  additionalNamespaces:
+    - gh-operator-app
+    - hello-operator-system
+  additionalImages:
+    - grahamh/hello-operator:1.0
+    - grahamh/hello-replicated:3.0
+  statusInformers:
+    - service/hello-app-app-chart
+    - deployment/hello-app-app-chart
+    - hello-operator-system/deployment/hello-operator-controller-manager
+    - hello-operator-system/service/hello-operator-controller-manager-metrics-service
+  ports:
+    - serviceName: "gh-operator-app"
+      servicePort: 8080
+      localPort: 8082
+      applicationUrl: "http://gh-operator-app"

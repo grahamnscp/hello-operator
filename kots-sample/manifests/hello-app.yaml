@@ -1,0 +1,52 @@
+apiVersion: hello.grahamh/v1alpha1
+kind: Hello
+metadata:
+  name: hello-app
+spec:
+  # Default values copied from <project_dir>/helm-charts/app-chart/values.yaml
+  Release:
+    Namespace: default
+  affinity: {}
+  fullnameOverride: ""
+  spec:
+    serviceAccountName: kotsadm
+    initContainers:
+    - name: wait-for-hello-operator
+      image: "bitnami/kubectl:latest"
+      imagePullPolicy: IfNotPresent
+      command:
+        - kubectl
+      args:
+        - wait
+        - hello-operator-system/deployment/hello-operator-controller-manager
+        - --for=condition=ready
+        - --timeout=240s
+  image:
+    pullPolicy: IfNotPresent
+    repository: grahamh/hello-replicated
+    tag: ""
+  imagePullSecrets: []
+  nameOverride: ""
+  nodeSelector: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  replicaCount: repl{{ ConfigOption "num_replicas" | ParseInt }}
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  securityContext: {}
+  service:
+    nodeport: 8082
+    port: 8080
+    type: NodePort
+  serviceAccount:
+    annotations: {}
+    create: true
+    name: ""
+  tolerations: []
+  
+  
